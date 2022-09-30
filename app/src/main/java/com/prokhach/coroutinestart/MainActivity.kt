@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
             loadData()
         }
     }
-//
+
     private fun loadData() {
         binding.progress.isVisible = true
         binding.buttonLoad.isEnabled = false
@@ -34,22 +34,27 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun loadCity(callback: (String) -> Unit) {
         thread {
-            Thread.sleep(5000)
-            callback.invoke("Moscow")
+            Thread.sleep(3000)
+            runOnUiThread { callback.invoke("Moscow") }
         }
-
     }
 
     private fun loadTemperature(city: String, callback: (Int) -> Unit) {
-        Toast.makeText(
-            this,
-            city,
-            Toast.LENGTH_SHORT
-        ).show()
-        Thread.sleep(5000)
-        callback.invoke(17)
+        thread {
+            runOnUiThread {
+                Toast.makeText(
+                    this,
+                    getString(R.string.loading_temperature_toast, city),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            Thread.sleep(3000)
+            runOnUiThread {
+                callback.invoke(17)
+            }
+        }
     }
+
 }
